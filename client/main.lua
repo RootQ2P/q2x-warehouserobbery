@@ -1,6 +1,9 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local hasJob = false
 local cooldown = false
+local Loot1 = false 
+local Loot2 = false 
+local Loot3 = false 
 
 -- Main
 RegisterNetEvent('q2x:client:startCooldown',function ()
@@ -42,16 +45,18 @@ RegisterNetEvent('q2x:client:startJob',function ()
     else if cooldown == true then
         QBCore.Functions.Notify("Cooldown Now Fuck Off", 'error', 5000)
         return
-    end
-    end
+      end
+   end
 end)
 
 
 -- Doors
 RegisterNetEvent('q2x:client:hackdoor',function ()
-    print(hasJob)
     if cooldown == false then
     if hasJob == true then
+    if QBCore.Functions.HasItem(Config.bomb) then
+    TriggerServerEvent('q2x:server:removeitem')
+    TriggerEvent('q2x:client:dispatch')
     exports['ps-ui']:Thermite(function(success)
         if success then
             TriggerEvent('q2x:client:SpawnNPC', 1)
@@ -60,14 +65,17 @@ RegisterNetEvent('q2x:client:hackdoor',function ()
             print("fail")
         end
      end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
     end
-end
+  end
 end)
 
 RegisterNetEvent('q2x:client:hackg1',function ()
-    print(hasJob)
     if cooldown == false then
     if hasJob == true then
+        if QBCore.Functions.HasItem(Config.bomb) then
+            TriggerServerEvent('q2x:server:removeitem')
+            TriggerEvent('q2x:client:dispatch')    
     exports['ps-ui']:Thermite(function(success)
         if success then
             TriggerEvent('q2x:client:SpawnNPC', 1)
@@ -76,15 +84,17 @@ RegisterNetEvent('q2x:client:hackg1',function ()
             print("fail")
         end
      end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
     end
-end
+  end
 end)
 
-
 RegisterNetEvent('q2x:client:hackg2',function ()
-    print(hasJob)
     if cooldown == false then
     if hasJob == true then
+     if QBCore.Functions.HasItem(Config.bomb) then
+            TriggerServerEvent('q2x:server:removeitem')
+            TriggerEvent('q2x:client:dispatch')  
     exports['ps-ui']:Thermite(function(success)
         if success then
             TriggerEvent('q2x:client:SpawnNPC', 1)
@@ -93,12 +103,55 @@ RegisterNetEvent('q2x:client:hackg2',function ()
             print("fail")
         end
      end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
     end
-end
+  end
+end)
+-- Doors End
+
+-- loot
+
+RegisterNetEvent('q2x:client:loot1',function ()
+    if not Loot1 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot1', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards1')
+       end
+    end
+end)
+
+RegisterNetEvent('q2x:client:loot2',function ()
+    if not Loot2 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot2', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards2')
+       end
+    end
 end)
 
 
--- Doors End
+RegisterNetEvent('q2x:client:loot3',function ()
+    if not Loot2 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot3', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards3')
+       end
+    end
+end)
+-- loot end
+
+
+
+
 
 
 
@@ -125,3 +178,16 @@ exports['qb-target']:AddTargetModel(Config.Ped, {
 })
 
 
+
+RegisterNetEvent('q2x:client:dispatch', function(data, outside)
+exports["ps-dispatch"]:CustomAlert({
+    coords = vector3(0.0, 0.0, 0.0),
+    message = "10-15 - Warehouse Robbery",
+    description = "Warehouse Robbery",
+    radius = 0,
+    sprite = 64,
+    color = 2,
+    scale = 1.0,
+    length = 3,
+})
+end)

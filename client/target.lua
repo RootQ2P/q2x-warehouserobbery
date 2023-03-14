@@ -97,46 +97,7 @@ exports['qb-target']:AddBoxZone("3", vector3(944.91, -1470.37, 30.1), 1.6, 3, {
     },
     distance = 1.5
 })   
-exports['qb-target']:AddBoxZone("3", vector3(945.47, -1466.45, 30.1), 3.2, 3, {
-    name = "2",
-    heading=0,
-    debugPoly = false,
-}, { 
-    options = {
-        {
-            type = "Client",
-            event = "q2x:client:loot3",
-            icon = "fas fa-question",
-            label = 'Grab Items'
-            
-        },
-    },
-    distance = 1.5
-})  
 -- loot
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 -- lib
@@ -144,7 +105,15 @@ RegisterCommand("heist", function(source --[[ this is the player ID (on the serv
     TriggerServerEvent('q2x:server:ResetHeist')
 end, true) -- this true bool means that the user cannot execute the command unless they have the 'command.commandName' ACL object allowed to one of their identifiers.
 
-
+RegisterNetEvent('q2x:client:setloot1', function(status)
+    Loot1 = status
+end)
+RegisterNetEvent('q2x:client:setloot2', function(status)
+    Loot2 = status
+end)
+RegisterNetEvent('q2x:client:setloot3', function(status)
+    Loot3 = status
+end)
     
 -- thread
 Citizen.CreateThread(function()

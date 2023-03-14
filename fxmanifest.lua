@@ -1,9 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description ''
-author ''
-version '0.0.0'
+description 'Warehouse Robbery'
+author 'Q2P'
+version '1.0.0'
 
 client_scripts { 
  'client/**/*' 

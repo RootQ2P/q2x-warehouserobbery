@@ -2,11 +2,13 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 local Loot1 = false 
 local Loot2 = false 
+local Loot3 = false 
 
 
 RegisterNetEvent('q2x:server:ResetHeist', function()
     TriggerEvent('q2x:server:setloot1', false)
     TriggerEvent('q2x:server:setloot2', false)
+    TriggerEvent('q2x:server:setloot3', false)
     TriggerEvent('q2x:server:closedoor', Config.DoorId)
     TriggerEvent('q2x:server:closedoor', Config.DoorId2)
     TriggerEvent('q2x:server:closedoor', Config.DoorId3)
@@ -29,6 +31,16 @@ RegisterNetEvent('q2x:server:setloot2', function(status)
         TriggerClientEvent('q2x:client:setloot2', -1, Loot2)
     end
 end)
+
+RegisterNetEvent('q2x:server:setloot3', function(status)
+    if status ~= nil then
+        Loot3 = status
+        TriggerClientEvent('q2x:client:setloot3', -1, Loot3)
+    else 
+        TriggerClientEvent('q2x:client:setloot3', -1, Loot3)
+    end
+end)
+
 
 
 -- open a door
@@ -61,11 +73,18 @@ QBCore.Functions.CreateCallback('q2x:server:SpawnNPC', function(source, cb, loc)
     local netIds = {}
     local netId
     local npc
-    for i=1, #Config.Shooters['soldiers'].locations[loc].peds, 1 do
-        npc = CreatePed(30, getRandomNPC(), Config.Shooters['soldiers'].locations[loc].peds[i], true, false)
+    for i=1, #Config.Shooters['whouse'].locations[loc].peds, 1 do
+        npc = CreatePed(30, getRandomNPC(), Config.Shooters['whouse'].locations[loc].peds[i], true, false)
         while not DoesEntityExist(npc) do Wait(10) end
         netId = NetworkGetNetworkIdFromEntity(npc)
         netIds[#netIds+1] = netId
     end
     cb(netIds)
+end)
+
+RegisterNetEvent('q2x:server:removeitem', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+            Player.Functions.RemoveItem(Config.bomb, 1)
+            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[Config.bomb], "remove")
 end)
