@@ -191,3 +191,13 @@ exports["ps-dispatch"]:CustomAlert({
     length = 3,
 })
 end)
+
+RegisterNetEvent('q2x:client:setloot1', function(status)
+    Loot1 = status
+end)
+RegisterNetEvent('q2x:client:setloot2', function(status)
+    Loot2 = status
+end)
+RegisterNetEvent('q2x:client:setloot3', function(status)
+    Loot3 = status
+end)

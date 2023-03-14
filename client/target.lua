@@ -105,15 +105,7 @@ RegisterCommand("heist", function(source --[[ this is the player ID (on the serv
     TriggerServerEvent('q2x:server:ResetHeist')
 end, true) -- this true bool means that the user cannot execute the command unless they have the 'command.commandName' ACL object allowed to one of their identifiers.
 
-RegisterNetEvent('q2x:client:setloot1', function(status)
-    Loot1 = status
-end)
-RegisterNetEvent('q2x:client:setloot2', function(status)
-    Loot2 = status
-end)
-RegisterNetEvent('q2x:client:setloot3', function(status)
-    Loot3 = status
-end)
+
     
 -- thread
 Citizen.CreateThread(function()
