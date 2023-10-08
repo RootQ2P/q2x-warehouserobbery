@@ -7,9 +7,9 @@ PREVIEW: https://streamable.com/m1olx6
 
 
 
-## Support
+## Made for new sky rp Join today 
 
-For support, Join https://discord.gg/b6dHCAhJxy.
+Join today https://discord.gg/newsky.
 
 
 # Dependencies
@@ -17,7 +17,6 @@ For support, Join https://discord.gg/b6dHCAhJxy.
 * [qb-inventory](https://github.com/qbcore-framework/qb-inventory)
 * [ps-dispatch](https://github.com/qbcore-framework/qb-menu)
 * [ps-ui](https://github.com/Project-Sloth/ps-ui)
-* [Map](https://forum.cfx.re/t/release-warehouse-interior-mlo/1680360)
 ## Authors
 
 - [@RootQ2P](https://www.github.com/RootQ2P)
