@@ -2,7 +2,7 @@
 # q2x-warehouserobbery
 
 FREE - OPEN SOURCE Warehouse Robbery
-PREVIEW: https://streamable.com/m1olx6 
+[PREVIEW:]((https://www.youtube.com/watch?v=udsRqAuu6G8)
 
 
 
