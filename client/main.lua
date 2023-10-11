@@ -49,18 +49,7 @@ RegisterNetEvent('q2x:client:startJob', function()
     end
 end)
 
-RegisterNetEvent('q2x:client:dispatch', function(data, outside)
-    exports["ps-dispatch"]:CustomAlert({
-        coords = vector3(0.0, 0.0, 0.0),
-        message = "10-15 - Warehouse Robbery",
-        description = "Warehouse Robbery",
-        radius = 0,
-        sprite = 64,
-        color = 2,
-        scale = 1.0,
-        length = 3,
-    })
-end)
+
 
 RegisterNetEvent('q2x:client:loot', function(data, outside)
     Wait(1)
@@ -102,6 +91,7 @@ RegisterNetEvent('test:client:target:enterLocation', function()
     if hasJob then
         exports['ps-ui']:VarHack(function(success)
             if success then
+                exports['ps-dispatch']:SuspiciousActivity()
                 print("Success: Fading out screen...")
                 DoScreenFadeOut(500)
                 while not IsScreenFadedOut() do
@@ -112,6 +102,7 @@ RegisterNetEvent('test:client:target:enterLocation', function()
                 DoScreenFadeIn(500)
             else
                 print("Fail: VarHack failed.")
+exports['ps-dispatch']:SuspiciousActivity()
             end
         end, 2, 3) -- Number of Blocks, Time (seconds)
     else 
