@@ -1,126 +1,161 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local hasJob = false
 local cooldown = false
-local crate = 0
+local Loot1 = false 
+local Loot2 = false 
+local Loot3 = false 
 
 -- Main
-RegisterNetEvent('q2x:client:startCooldown', function()
+RegisterNetEvent('q2x:client:startCooldown',function ()
     local timer = Config.cooldown * 60000
     while timer > 0 do
-        Wait(1000)
-        print("test")
-        timer = timer - 1000
+    Wait(1000)
+    print("test")
+    timer = timer - 1000
         if timer == 0 then
-            cooldown = false
-            TriggerEvent('q2x:client:ResetHeist')
+        cooldown = false
+        TriggerEvent('q2x:client:ResetHeist')
         end
     end
 end)
 
-RegisterNetEvent('q2x:client:startJob', function()
-    if cooldown then
-        QBCore.Functions.Notify("Cooldown is active. Please wait.", 'error', 5000)
-        return
-    end
-    
-    hasJob = true
-    QBCore.Functions.Notify("The job location has been marked on your map", 'success', 5000)
-    
-    -- Create a custom blip for the job location
-    local blip = AddBlipForCoord(1014.32, -2450.50, 28.39)
-    SetBlipSprite(blip, 161)
-    BeginTextCommandSetBlipName('MYBLIP')
-    EndTextCommandSetBlipName(blip)
-
-    local time = Config.jobTime * 60000
-
-    while hasJob and time > 0 do
-        Wait(1000)
-        time = time - 1000
-
-        if time <= 0 then
+-- Start
+RegisterNetEvent('q2x:client:startJob',function ()
+    if cooldown == false then
+        hasJob = true
+        QBCore.Functions.Notify("The location have been marked on your map", 'success', 5000)
+            AddTextEntry('MYBLIP', 'Warehouse Robbery')
+            local blip = AddBlipForCoord(939.94, -1476.03, 32.69)
+            SetBlipSprite(blip,161)
+            BeginTextCommandSetBlipName('MYBLIP')
+            EndTextCommandSetBlipName(blip)
+            local time = Config.jobTime*60000
+        while hasJob == true and time > 0 do
+            Wait(1000)
+            time = time - 1000
+            if time == 0 then
             hasJob = false
             cooldown = true
-            QBCore.Functions.Notify("Your contract has ended", 'error', 5000)
+            QBCore.Functions.Notify("Your Contract has ended", 'error', 5000)
             RemoveBlip(blip)
             TriggerEvent('q2x:client:startCooldown')
             print(cooldown)
-        end
-    end
-end)
-
-
-
-RegisterNetEvent('q2x:client:loot', function(data, outside)
-    Wait(1)
-    local inRange = false  
-    if QBCore ~= nil then
-        local pos = GetEntityCoords(PlayerPedId())
-        for k in pairs(box.crate) do
-            local dist = #(pos - box.crate[k][1].xyz)
-            if dist < 3 then
-                inRange = true
-                if dist < 1.0 then
-                    if not box.crate[k].robbed then
-                        crate = k
-                        exports['ps-ui']:Circle(function(success)
-                            if success then
-                                print("success")
-                                TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
-                                Wait(5000)
-                                TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                                TriggerServerEvent('q2x:server:rewards')
-                                TriggerServerEvent("q2x-warehouse:server:setCrateStatus", crate)
-                            else
-                                print("fail")
-                            end
-                        end, 2, 20) -- NumberOfCircles, MS
-                        print(k)
-                    end
-                end
             end
         end
-    end
-
-    if not inRange then
-        Wait(2000)
-    end
+    else if cooldown == true then
+        QBCore.Functions.Notify("Cooldown Now Fuck Off", 'error', 5000)
+        return
+      end
+   end
 end)
 
-RegisterNetEvent('test:client:target:enterLocation', function()
-    if hasJob then
-        exports['ps-ui']:VarHack(function(success)
-            if success then
-                exports['ps-dispatch']:SuspiciousActivity()
-                print("Success: Fading out screen...")
-                DoScreenFadeOut(500)
-                while not IsScreenFadedOut() do
-                    makein()
-                    Wait(10)
-                end
-                SetEntityCoords(PlayerPedId(), Config.warehousesmall.x, Config.warehousesmall.y, Config.warehousesmall.z)
-                DoScreenFadeIn(500)
-            else
-                print("Fail: VarHack failed.")
-exports['ps-dispatch']:SuspiciousActivity()
-            end
-        end, 2, 3) -- Number of Blocks, Time (seconds)
-    else 
-        QBCore.Functions.Notify("You Don't Have the Job", 'error', 5000)
-    end
-end)
 
-RegisterNetEvent('q2x-warehouse:client:setCrateStatus', function(batch, val)
-    -- Has to be a better way maybe like adding a unique id to identify the register
-    if type(batch) ~= "table" then
-        box.crate[batch] = val
-    else
-        for k in pairs(batch) do
-            box.crate[k] = batch[k]
+-- Doors
+RegisterNetEvent('q2x:client:hackdoor',function ()
+    if cooldown == false then
+    if hasJob == true then
+    if QBCore.Functions.HasItem(Config.bomb) then
+    TriggerServerEvent('q2x:server:removeitem')
+    TriggerEvent('q2x:client:dispatch')
+    exports['ps-ui']:Thermite(function(success)
+        if success then
+            TriggerEvent('q2x:client:SpawnNPC', 1)
+            door1()            
+        else
+            print("fail")
         end
+     end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
+    end
+  end
+end)
+
+RegisterNetEvent('q2x:client:hackg1',function ()
+    if cooldown == false then
+    if hasJob == true then
+        if QBCore.Functions.HasItem(Config.bomb) then
+            TriggerServerEvent('q2x:server:removeitem')
+            TriggerEvent('q2x:client:dispatch')    
+    exports['ps-ui']:Thermite(function(success)
+        if success then
+            TriggerEvent('q2x:client:SpawnNPC', 1)
+            door2()            
+        else
+            print("fail")
+        end
+     end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
+    end
+  end
+end)
+
+RegisterNetEvent('q2x:client:hackg2',function ()
+    if cooldown == false then
+    if hasJob == true then
+     if QBCore.Functions.HasItem(Config.bomb) then
+            TriggerServerEvent('q2x:server:removeitem')
+            TriggerEvent('q2x:client:dispatch')  
+    exports['ps-ui']:Thermite(function(success)
+        if success then
+            TriggerEvent('q2x:client:SpawnNPC', 1)
+            door3()            
+        else
+            print("fail")
+        end
+     end, 10, 5, 3) -- Time, Gridsize (5, 6, 7, 8, 9, 10), IncorrectBlocks
+      end
+    end
+  end
+end)
+-- Doors End
+
+-- loot
+
+RegisterNetEvent('q2x:client:loot1',function ()
+    if not Loot1 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot1', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards1')
+       end
     end
 end)
 
+RegisterNetEvent('q2x:client:loot2',function ()
+    if not Loot2 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot2', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards2')
+       end
+    end
+end)
+
+
+RegisterNetEvent('q2x:client:loot3',function ()
+    if not Loot2 then 
+       if hasJob == true then
+        TriggerEvent('animations:client:EmoteCommandStart', {"medic"})
+        TriggerServerEvent('q2x:server:setloot3', true)
+        Wait(5000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerServerEvent('q2x:server:rewards3')
+       end
+    end
+end)
+-- loot end
+
+
+
+
+
+
+
+-- lib
 exports['qb-target']:AddTargetModel(Config.Ped, {
     options = {
         {
@@ -133,6 +168,36 @@ exports['qb-target']:AddTargetModel(Config.Ped, {
                 end
             end,
         },
+        {
+            event = "q2x:client:hack",
+            icon = "fa-thin fa-warehouse",
+            label = "test",
+        },
     },
     distance = 2.5,
 })
+
+
+
+RegisterNetEvent('q2x:client:dispatch', function(data, outside)
+exports["ps-dispatch"]:CustomAlert({
+    coords = vector3(0.0, 0.0, 0.0),
+    message = "10-15 - Warehouse Robbery",
+    description = "Warehouse Robbery",
+    radius = 0,
+    sprite = 64,
+    color = 2,
+    scale = 1.0,
+    length = 3,
+})
+end)
+
+RegisterNetEvent('q2x:client:setloot1', function(status)
+    Loot1 = status
+end)
+RegisterNetEvent('q2x:client:setloot2', function(status)
+    Loot2 = status
+end)
+RegisterNetEvent('q2x:client:setloot3', function(status)
+    Loot3 = status
+end)
